@@ -1,0 +1,211 @@
+﻿
+@{
+
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 主页";
+    ViewBag.MainTitle = "主页";
+    ViewBag.SecondTitle = "";
+    ViewBag.Menu1 = "menuHome";
+}
+@section CSSs{
+    <link href="~/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+}
+<div class="row">
+    <div class="col-md-3 col-sm-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>@ViewBag.AlarmCount<span style="font-size:1.5rem;font-weight:lighter">条</span></h3>
+                <p>未确认告警</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-bell"></i>
+            </div>
+            <a class="small-box-footer" href="/Alarm">查看告警详情<i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-md-3 col-sm-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>@ViewBag.OrganCount<span style="font-size:1.5rem;font-weight:lighter">项</span></h3>
+                <p>网点机构</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-sitemap"></i>
+            </div>
+            <a class="small-box-footer" href="/Organization/OrganLineConfig">查看网点机构详情 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>@ViewBag.LineCount<span style="font-size:1.5rem;font-weight:lighter">个</span></h3>
+                <p>通讯线路</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-pie-chart"></i>
+            </div>
+            <a class="small-box-footer" href="/Organization/OrganLineConfig">查看通讯线路详情 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>2<span style="font-size:1.5rem;font-weight:lighter">类</span></h3>
+                <p>统计查询</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <a class="small-box-footer" href="/Statistics">查看详细 <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    
+        <div class="col-sm-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">告警日志</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div><!-- /.box-tools -->
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="tableAlarm" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                       data-click-to-select="true" data-mobile-responsive="true" data-query-params="SetparamsAlarm"
+                       data-method="post" data-url="/Alarm/SearchTop10"
+                       data-id-field="id" data-height="500">
+                    <thead>
+                        <tr class="active">
+
+                            <th data-field="IP">
+                                IP地址
+                            </th>
+                            <th data-field="Type">
+                                告警类型
+                            </th>
+                            <th data-field="FirstTime">
+                                最早告警时间
+                            </th>
+                            <th data-field="LastTime">
+                                最后告警时间
+                            </th>
+                            <th data-field="AlarmCount" data-align="center">
+                                次数
+                            </th>
+                            <th data-field="State" data-formatter="stateTextFormatter">
+                                状态
+                            </th>
+                            <th data-field="Confirm" data-align="center" data-formatter="stateFormatter">
+                                状态
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div><!-- /.box-body -->
+            <div class="box-footer statistics-box-footer">
+                <a type="button" class="btn btn-default pull-right" href="/Alarm">更多报警</a>
+            </div>
+        </div><!-- /.box -->
+    </div>
+        
+    <div class="col-sm-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">操作日志</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div><!-- /.box-tools -->
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="tableLog" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                       data-click-to-select="true" data-mobile-responsive="true" data-query-params="SetparamsLog"
+                       data-method="post" data-url="/Log/SearchTop10"
+                       data-id-field="id" data-height="500">
+                    <thead>
+                        <tr class="active">
+
+                            <th data-field="Content">
+                                日志内容
+                            </th>
+                            <th data-field="Time">
+                                记录时间
+                            </th>
+                            <th data-field="Type">
+                                日志类型
+                            </th>
+                            <th data-field="Username">
+                                操作用户
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div><!-- /.box-body -->
+            <div class="box-footer statistics-box-footer">
+                <a type="button" class="btn btn-default pull-right" href="/Log">查看更多日志</a>
+            </div>
+        </div><!-- /.box -->
+    </div>
+</div>
+
+@section javascripts{
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <script>
+        function stateTextFormatter(value, row) {
+            if (row.State == '正在告警') {
+                //正在告警
+                return '<span class="text-red">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+
+        function stateFormatter(value, row) {
+            if (!row.Confirm) {
+                return "<a type=\"button\" title=\"确认告警\" class=\"glyphicon glyphicon-list-alt text-orange\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>";
+            }
+        }
+
+        function openAlarmDetail(id, confirm) {
+            layer.confirm('是否确认选中告警？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Alarm/SolveAlarm",
+                    data: { alarmId: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            });
+        }
+
+        function selectTable() {
+            $('#tableAlarm').bootstrapTable('refresh', {});
+            $('#tableLog').bootstrapTable('refresh', {});            
+        }
+        function BeginRefresh() {
+            setTimeout(function () {
+                selectTable();
+            }, 30000);
+        }
+        BeginRefresh();
+    </script>
+}

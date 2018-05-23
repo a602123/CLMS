@@ -1,0 +1,14 @@
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\CLMS.Service.Service.exe.config
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\obj\Debug\CLMS.Service.Service.csprojResolveAssemblyReference.cache
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\CLMS.Service.Service.exe
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\CLMS.Service.Service.pdb
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\Newtonsoft.Json.dll
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Net.Http.Formatting.dll
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Web.Http.dll
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Web.Http.SelfHost.dll
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\Newtonsoft.Json.xml
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Net.Http.Formatting.xml
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Web.Http.xml
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\bin\Debug\System.Web.Http.SelfHost.xml
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\obj\Debug\CLMS.Service.Service.exe
+F:\GitTest\CLMS\CLMS.Service\CLMS.Service\CLMS.Service.Service\obj\Debug\CLMS.Service.Service.pdb

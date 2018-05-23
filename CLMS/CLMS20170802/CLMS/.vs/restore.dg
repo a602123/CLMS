@@ -1,0 +1,14 @@
+#:F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+#:F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+#:F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Test\CLMS.Test.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Test\CLMS.Test.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Test\CLMS.Test.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj|F:\GitTest\CLMS\CLMS\CLMS20170802\CLMS\src\CLMS.Model\CLMS.Model.xproj

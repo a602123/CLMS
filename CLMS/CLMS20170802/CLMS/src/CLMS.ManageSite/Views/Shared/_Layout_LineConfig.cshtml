@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html style="height:100%">
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <!-- 主题 -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" />
+    <!-- 皮肤-->
+    <link rel="stylesheet" href="/css/skins/_all-skins.min.css" />
+    <!-- 提示框 -->
+    @*<link href="/plugins/toastr/toastr.css" rel="stylesheet" />*@
+    <link href="/plugins/toastr/toastr.min.css" rel="stylesheet" />
+
+    @RenderSection("CSSs", false)
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed" style="height:100%">
+       
+        
+        
+        <div style="width:100%;height:100%;">
+            <section class="content">                
+                @RenderBody()
+            </section>
+            
+        </div>        
+        
+
+    
+    <!-- ./wrapper -->
+    <!-- REQUIRED JS SCRIPTS -->
+    <!-- jQuery 2.2.0 -->
+    <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!-- Bootstrap 3.3.6 -->
+    @*<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>*@
+    <script src="/plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/js/app.js"></script>
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+    <script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="/plugins/fastclick/fastclick.min.js"></script>
+
+    @*<script src="/plugins/signalR/jquery.signalR-2.2.1.js"></script>
+        <script src='/signalr/hubs'></script>*@
+
+    <script src="/plugins/layer/layer.min.js"></script>
+    <script src="/js/EasyCustom.js"></script>
+
+    <script src="/plugins/toastr/toastr.js"></script>
+     
+    @RenderSection("javascripts", false)
+    
+</body>
+</html>
+
+
+

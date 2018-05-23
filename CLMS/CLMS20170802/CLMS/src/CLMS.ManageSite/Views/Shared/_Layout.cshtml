@@ -1,0 +1,332 @@
+﻿@{
+    string style = ViewBag.style as string;
+    if (string.IsNullOrEmpty(style))
+    {
+        <!DOCTYPE html>
+    }
+    else
+    {
+        <!DOCTYPE html style="height:100%">
+    }
+}
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <!-- 主题 -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" />
+    <!-- 皮肤-->
+    <link rel="stylesheet" href="/css/skins/_all-skins.min.css" />
+    <!-- 提示框 -->
+    @*<link href="/plugins/toastr/toastr.css" rel="stylesheet" />*@
+    <link href="/plugins/toastr/toastr.min.css" rel="stylesheet" />
+
+    @RenderSection("CSSs", false)
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |
+|               | layout-boxed                            |
+|               | layout-top-nav                          |
+|               | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="wrapper">
+        <!-- Main Header -->
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo" href="/home/index">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">CLMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">@ViewDatas.GetInstance().GetSysName()</span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <!-- Navbar Right Menu -->
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+                        <li>
+                            <a class="btn" onclick="ResetPwd();" title="修改密码">
+                                <i class="fa fa-key"></i>
+                            </a>
+                        </li>
+                        <li class="dropdown messages-menu">
+                            <a class="btn" onclick="LogOut();" title="注销登陆">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+            </nav>
+        </header>
+        <!-- 左部区域 -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- 用户面板 -->
+                <!-- 目录 -->
+                @{
+                    var user = ViewDatas.GetInstance().GetUser(Context.Request);
+
+                    if ((user.RoleId == CLMS.Model.UserType.SysAdmin) )
+                    {
+                        <ul class="sidebar-menu">
+                            <li class="header">目录</li>
+
+                            <li><a href="/Home/Index"><i class="fa fa-home"></i><span>主页</span></a></li>
+                            <li><a href="/Home/monitor"><i class="fa fa-tachometer"></i><span>线路监控</span></a></li>
+
+                            <li class="treeview" id="menuInfo">
+                                <a href="#"><i class="fa fa-info-circle"></i> <span>基础信息管理</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">                                    
+                                    <li id="menuInfoOrgan"><a href="/Organization/OrganLineConfig">组织线路配置</a></li>
+                                    <li id="menuInfoTel"><a href="/Telbook">电话管理</a></li>                                    
+                                </ul>
+                            </li>
+
+
+                            <li class="treeview" id="menuLine">
+                                <a href="#"><i class="fa fa-dashboard"></i> <span>通讯线路管理</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    @*<li id="menuLineInfo"><a href="/Line">线路管理</a></li>*@
+                                    <li id="menuLineMap"><a href="/LineMap">线路地图</a></li>
+                                    <li id="menuLineAlarm"><a href="/Alarm">告警管理</a></li>
+                                    <li id="menuLineAlarmStatistics"><a href="/Statistics">统计查看</a></li>
+                                    @*<li id="menuIPAddressStatisticsDetail"><a href="/Statistics/DetailChart">自定义统计</a></li>*@
+                                    @*<li id="menuIPAddressApproval"><a href="/Article">审批汇总</a></li>*@
+                                </ul>
+                            </li>
+
+                            <li class="treeview" id="menuSys">
+                                <a href="#"><i class="fa fa-gear "></i> <span>系统设置</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="menuSysUser"><a href="/User">用户管理</a></li>
+                                    <li id="menuSysLog"><a href="/Log">日志管理</a></li>
+                                    <li id="menuSysData"><a href="/Config">配置参数</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="sidebar-menu">
+                            <li class="header">目录</li>
+                            <li><a href="/Home/Index"><i class="fa fa-dashboard"></i><span>主页</span></a></li>
+                            <li><a href="/Home/monitor"><i class="fa fa-tachometer"></i><span>线路监控</span></a></li>
+                            <li class="treeview" id="menuInfo">
+                                <a href="#"><i class="fa fa-info-circle"></i> <span>基础信息管理</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="menuInfoOrgan"><a href="/Organization/OrganLineConfig">组织线路配置</a></li>                                    
+                                </ul>
+                            </li>
+                            <li class="treeview" id="menuLine">
+                                <a href="#"><i class="fa fa-dashboard"></i> <span>通讯线路管理</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="menuLineMap"><a href="/LineMap">线路地图</a></li>                                    
+                                    <li id="menuIPAlarm"><a href="/Alarm">告警管理</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- /目录 -->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    @ViewBag.MainTitle
+                    <small>@ViewBag.SecondTitle</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href=""><i class="fa fa-dashboard"></i> @ViewBag.MainTitle</a></li>
+                    <li class="active">@ViewBag.SecondTitle</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <!-- Your Page Content Here -->
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2017 <a href="#">北京北方博业科技发展有限公司</a>.</strong> 。
+        </footer>
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED JS SCRIPTS -->
+    <!-- jQuery 2.2.0 -->
+    <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!-- Bootstrap 3.3.6 -->
+    @*<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>*@
+    <script src="/plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/js/app.js"></script>
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+    <script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="/plugins/fastclick/fastclick.min.js"></script>
+
+    @*<script src="/plugins/signalR/jquery.signalR-2.2.1.js"></script>
+    <script src='/signalr/hubs'></script>*@
+
+    <script src="/plugins/layer/layer.min.js"></script>
+    <script src="/js/EasyCustom.js"></script>
+
+    <script src="/plugins/toastr/toastr.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var menu1 = '@ViewBag.Menu1';
+            var menu2 = '@ViewBag.Menu2';
+            var mainMenu = $('#' + menu1);
+            mainMenu.addClass('active');
+            if (mainMenu.hasClass('treeview'))
+            {
+                mainMenu.children('.treeview-menu').addClass('open-menu');
+                $('#' + menu2).addClass('active');
+            }
+
+            //$.connection.hub.logging = true;
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-bottom-right",
+                "onclick": null,
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "10000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+            //$.connection.hub.start()
+            //.done(function () {
+            //})
+            //.fail(function () {
+            //    toastr.error("实时报警推送初始化失败，推送服务暂不可用，请联系管理人员。","警告");
+            //});
+
+            //var chat = $.connection.NoticeHub;
+            //chat.client.ReceiveMessage = function (message) {
+            //    switch (message.Type) {
+            //        case 1:
+            //            toastr.info(message.Content, "信息提示");
+            //            break;
+            //        default:
+            //            toastr.info(message.Content, "信息提示");
+            //            break;
+            //    }
+            //}
+        });
+
+        function LogOut() {
+            layer.confirm('注销登录？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Home/LogOut",
+                    success: function (data) {
+                        if (data.State == true) {
+                            location.href = '/Login/Index';
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }, function () {
+
+            });
+        }
+
+
+        function ResetPwd() {
+            layer.open({
+                title: '<a type=\"button\" title=\"\" class=\"glyphicon glyphicon-list-alt\"></a>&nbsp;修改密码',
+                type: 2,
+                area: ['500px', '500px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: '/User/ResetPwd',
+                success: function (layero, index) {
+                },
+                end: function () {
+                }
+            });
+        }
+    </script>
+    @RenderSection("javascripts", false)
+</body>
+</html>
+
+
+

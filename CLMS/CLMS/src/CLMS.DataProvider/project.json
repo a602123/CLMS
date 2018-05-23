@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "CLMS.Model": "1.0.0-*",
+    "Dapper": "1.50.0",
+    "Microsoft.Extensions.Configuration": "1.1.1",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+    "MySql.Data.EntityFrameworkCore": "7.0.7-m61",
+    "NETStandard.Library": "1.6.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

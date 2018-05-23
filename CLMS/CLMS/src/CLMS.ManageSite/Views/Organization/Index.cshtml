@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 组织管理";
+    ViewBag.MainTitle = "基础信息管理";
+    ViewBag.SecondTitle = "组织管理";
+    ViewBag.Menu1 = "menuInfo";
+    ViewBag.Menu2 = "menuInfoOrgan";
+}
+@section CSSs{
+    <link href="/plugins/angular-treegrid-directive/treeGrid.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">组织列表</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+
+    <div class="box-body">
+        @if (ViewBag.Initialize)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                <a class="col-lg-6 btn btn-success" href="/Organization/Add">
+                    点击初始化创建根节点
+                    </a>
+                 </div>   
+            </div>
+        }
+        else
+        {
+            <div ng-app="treeGridTest">
+                <div ng-controller="treeGridController">
+
+                    <div id="tb" class="form-inline">
+                        @*<a class="btn btn-default btn-sm" href="/Organization/Add/0">添加一级节点</a>*@
+
+                        <button ng-click="my_tree.expand_all()" class="btn btn-default btn-sm" id="btnExpand">全部展开</button>
+                        <button ng-click="my_tree.collapse_all()" class="btn btn-default btn-sm">全部收起</button>
+                        <input class="pull-right col-md-2 col-sm-3  " type="text" data-ng-model="filterString" placeholder="查询条件(空格或回车结束)" />
+                    </div>
+
+                    <div style="border:1px solid #e4eaec;margin-top:10px">
+                        <tree-grid tree-data="tree_data" expand-on="expanding_property" tree-control="my_tree" col-defs="col_defs"></tree-grid>
+                    </div>
+                    @*expand-to= "expand_to" expand-level= "3"*@
+                </div>
+            </div>
+        }
+        
+    </div>
+    <!-- /.box-body -->
+</div>
+@section javascripts{
+    <script src="/plugins/Angular/js/angular.js"></script>
+    <script src="/plugins/angular-treegrid-directive/tree-grid-directive.js"></script>
+    @if (!ViewBag.Initialize)
+    {
+    <script src="/js/Pages/Organ-Index.js"></script>
+    }
+    
+    <script>
+        $(document).ready(function () {
+            $("#btnExpand").click();
+        });
+        
+    </script>
+}
+
+
+
+

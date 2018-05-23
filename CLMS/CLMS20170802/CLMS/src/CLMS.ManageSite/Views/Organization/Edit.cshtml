@@ -1,0 +1,179 @@
+﻿@model CLMS.Model.OrganModel
+
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 组织管理";    
+    ViewBag.MainTitle = "基础信息管理";
+    ViewBag.SecondTitle = "组织线路配置";
+    Layout = "~/Views/Shared/_Layout_LineConfig.cshtml";
+}
+@section CSSs{
+    <link href="/plugins/kindeditor/default/default.css" rel="stylesheet" />
+    <link href="/plugins/select2/css/select2.css" rel="stylesheet" />
+}
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">组织管理-编辑</h3>        
+    </div>
+    <form id="addForm" role="form">
+        <div class="box-body">
+            <div id="alertDiv">
+
+            </div>
+            <div class="row">
+                @Html.HiddenFor(m => m.Id, new { @id = "hiddenId" })
+                @Html.HiddenFor(m => m.ParentId, new { @id = "hiddenParentId" })
+
+                <div class="form-group  col-md-6">
+                    <label for="Name">
+                        节点名称*
+                    </label>
+                    @if (Model.Id == 1)
+                    {
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control required", @readonly = "readonly", @placeholder = "节点名称" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control required", @placeholder = "节点名称" })
+                    }
+
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="Description">
+                        描述
+                    </label>
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control", @placeholder = "描述" })
+                </div>
+                <div class="form-group  col-md-6">
+                    <label for="SMSTelephone">
+                        短信联系人*
+                    </label>                                                    
+                    @*Html.ListBoxFor(m =>m.SMSTelephone, new MultiSelectList(ViewDatas.GetInstance().GetSMSTelbook(), "Value", "Text",ViewDatas.GetInstance().GetSmSTelbookSelected(@ViewBag.SMSTelephone)), new { @class = "form-control select2-multiple required" })*@
+                    
+                        <select class="form-control select2-multiple required"  name="SMSTelephone" multiple="multiple" id="multiSelectForSMSTelephone">
+                        @{                               
+                            var list = ViewDatas.GetInstance().GetSmSTelbookSelected(@ViewBag.SMSTelephone);
+                            foreach (SelectListItem item in list)
+                            {
+                                if (item.Selected)
+                                {
+                                    <option value="@item.Value" selected="selected">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value" >@item.Text</option>
+                                }
+
+                            }
+                        }
+                      </select>
+
+                    
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="ParentOrganizationName">
+                        父级名称*
+                    </label>
+                    @Html.TextBoxFor(m => m.ParentOrganizationName, new { @class = "form-control", @placeholder = "父级名称", @readonly = true })
+                </div>
+            </div>
+            <div class="box-footer">
+                <a type="button" class="btn btn-default pull-right" href="javascript:Close();">取消</a>
+                <button type="button" style="margin-right: 10px" onclick="SubmitForm();" class="btn btn-primary pull-right">
+                    提交
+                </button>
+
+                @*<button type="button" style="margin-right: 10px" onclick="Test();" class="btn btn-danger pull-right">
+                    测试
+                </button>*@
+            </div>
+
+        </div>
+    </form>
+    <!-- /.box-body -->
+</div>
+@section javascripts{
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+    <script src="/plugins/plupload/plupload.full.min.js"></script>
+    <script src="/plugins/kindeditor/kindeditor-all.js"></script>
+    <<script src="/plugins/select2/js/select2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2-multiple').select2({
+                placeholder: "短信联系人"
+            });
+        });
+        var editor;
+        StartValidate('addForm');
+
+        function SubmitForm() {
+            if ($('#addForm').valid()) {
+                $('#alertDiv').empty();
+                console.log($('#addForm').serialize());
+                var smstelephone = "";
+                $(".select2-multiple").each(function () {
+                    smstelephone +=$(this).val();
+                });
+                console.log('smstelephone' + smstelephone);
+                var model = {
+                    Id: $("input[name='Id']").val(),
+                    ParentId: $("input[name='ParentId']").val(),
+                    Name: $("input[name='Name']").val(),
+                    Description: $("input[name='Description']").val(),
+                    SMSTelephone: smstelephone
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Organization/Edit",
+                    data: model,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('修改成功！');
+                            setTimeout(Close, 1000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function Test() {
+            $.ajax({
+                type: 'POST',
+                url: "/Organization/GetChildren",
+                data: { id: $("#hiddenId").val() },
+                dataType: 'json',
+                success: function (data) {                   
+                },
+                error: function () {
+                    var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                    $('#alertDiv').append(alertDiv);
+                }
+            });
+        }
+
+
+        function Close() {
+            //location.href = '/Organization/Index';   
+          
+            parent.layer.closeAll()
+        }
+
+    </script>
+
+
+}
+

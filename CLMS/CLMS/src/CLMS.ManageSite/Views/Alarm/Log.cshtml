@@ -1,0 +1,103 @@
+﻿@{
+    Layout = null;
+    CLMS.Model.LineModel line = ViewBag.Line as CLMS.Model.LineModel;
+}
+<link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+<link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/AdminLTE.min.css" />
+
+<div class="content">
+    <div class="box box-comment">
+        <div class="box-header with-border">
+
+            <form id="searchForm" class="form-inline">
+                <div class="form-group">
+                    <h4>线路 @line.Name (@line.LineIP) 告警情况如下：</h4>
+                </div>
+            </form>
+
+        </div>
+
+        <div>
+            <form id="ipForm" class="form-inline">
+                <table id="tableAlarm" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                       data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true"
+                       data-method="post" data-url="/Alarm/GetListByLine/@line.Id" data-striped="true"
+                       data-id-field="Id" data-height="300">
+                    <thead style="font-family:'SimHei';">
+                        <tr class="active">
+                            <th data-field="Type" data-align="center">
+                                告警类型
+                            </th>
+                            <th data-field="FirstTime" data-align="center">
+                                最早告警时间
+                            </th>
+                            <th data-field="LastTime" data-align="center">
+                                最后告警时间
+                            </th>
+                            <th data-field="AlarmCount" data-align="center">
+                                告警次数
+                            </th>
+                            <th data-field="State" data-formatter="stateFormatter" data-align="center">
+                                状态
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </form>
+        </div>
+        <div class="box-footer text-center">
+
+            <button type="button" style="margin-right: 10px" onclick="Solve();" class="btn btn-primary">
+                处理该线路所有告警
+            </button>
+            <a type="button" class="btn btn-default" href="javascript:parent.layer.closeAll();">取消</a>
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+<script>
+
+    function Solve() {
+        $.ajax({
+            type: 'POST',
+            url: "/Alarm/SolveLineAlarm",
+            data: { lineId: @line.Id },
+            dataType: 'json',
+            success: function (data) {
+                if (data.State == true) {
+                    layer.msg('操作完成！');
+                    setTimeout(Close, 1000);
+                }
+                else {
+                    layer.msg(data.Message);
+                }
+            },
+            error: function () {
+                layer.msg('网络错误，请重试！');
+            }
+        });
+    }
+
+    function stateFormatter(value, row) {
+        if (row.State == '正在告警') {
+            //正在告警
+            return '<span class="text-red" style="font-weight:  600">' + value + '</span>';
+        } else {
+            return '<span class="text-black">' + value + '</span>';
+        }
+    }
+
+    function Close() {
+        parent.selectTable();
+        parent.layer.closeAll();
+    }
+</script>
+<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.js"></script>
+<script src="/plugins/layer/layer.min.js"></script>
+<script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/EasyCustom.js"></script>

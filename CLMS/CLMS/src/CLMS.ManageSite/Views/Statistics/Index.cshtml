@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 统计查看";
+    ViewBag.MainTitle = "通讯线路管理";
+    ViewBag.SecondTitle = "统计查看";
+    ViewBag.Menu1 = "menuLine";
+    ViewBag.Menu2 = "menuLineAlarmStatistics";
+}
+@section CSSs{
+    <link href="/css/Pages/StatisticsIndex.css" rel="stylesheet" />
+}
+<div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                        <li class="active">
+                            <a href="#divMonthAlarm" data-toggle="tab">30天告警统计</a>
+                        </li>
+                        <li>
+                            <a href="#divTwoMonthAlarm" data-toggle="tab">60天告警统计</a>
+                        </li>
+                        <li>
+                            <a href="#divSixMonthAlarm" data-toggle="tab">180天告警统计</a>
+                        </li>
+                        <li class="pull-left header">
+                            <i class="fa fa-bell"></i>
+                            告警统计
+                        </li>
+                    </ul>
+                    <div class="tab-content no-padding">
+                        <div class="chart tab-pane active" id="divMonthAlarm">
+                            <canvas id="chartMonthAlarm"></canvas>
+                        </div>
+                        <div class="chart tab-pane" id="divTwoMonthAlarm">
+                            <canvas id="chartTwoMonthAlarm"></canvas>
+                        </div>
+                        <div class="chart tab-pane" id="divSixMonthAlarm">
+                            <canvas id="chartSixMonthAlarm"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer statistics-box-footer">
+                    <a type="button" class="btn btn-default pull-right" href="/Alarm" style="margin-right: 10px">查看详情</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                        <li class="active">
+                            <a href="#divOrgan" data-toggle="tab">线路状态统计</a>
+                        </li>
+                        <li>
+                            <a href="#divAlarm" data-toggle="tab">网点状态统计</a>
+                        </li>
+                        <li class="pull-left header">
+                            <i class="fa fa-server"></i>
+                            状态总览
+                        </li>
+                    </ul>
+                    <div class="tab-content no-padding">
+                        <div class="chart tab-pane active" id="divOrgan">                            
+                            <canvas id="chartOrganlSum"></canvas>                                                                                                  
+                        </div>
+                        <div class="chart tab-pane" id="divAlarm">                            
+                                <canvas id="chartAlarmSum"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer statistics-box-footer">
+                    <a type="button" class="btn btn-default pull-right" href="/Home/Monitor" style="margin-right: 10px">查看详情</a>
+                </div>               
+            </div>
+        </div>
+    </div>
+</div>
+@section javascripts{
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/plugins/chartjs/Chart.js"></script>
+    <script src="/js/Pages/DrawChart.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: "/Statistics/GetData",
+                //data: { ids: idArray },
+                dataType: 'json',
+                success: function (data) {
+                    BuildLineChart(data.data.AlartMonthData.Titles, data.data.AlartMonthData.Datas, "chartMonthAlarm");
+                    BuildLineChart(data.data.AlartTwoMonthData.Titles, data.data.AlartTwoMonthData.Datas, "chartTwoMonthAlarm");
+                    BuildLineChart(data.data.AlartSixMonthData.Titles, data.data.AlartSixMonthData.Datas, "chartSixMonthAlarm");
+
+                    BuildDoughnutChart(data.data.LineStateData.Titles, data.data.LineStateData.Datas, "chartOrganlSum", '线路总数');
+
+                    BuildDoughnutChart(data.data.OrganStateDate.Titles, data.data.OrganStateDate.Datas, "chartAlarmSum", '网点总数'); //chartAlarmSum
+                    //BuildDoughnutChart(data.data.AlarmSumData.Titles, data.data.AlarmSumData.Datas, "chartAlarmSum", '报警线路总数'); //chartAlarmSum
+                },
+                error: function () {
+                    layer.msg('网络错误，请重试！');
+                }
+            });
+
+        })
+
+
+
+
+    </script>
+}

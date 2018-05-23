@@ -1,0 +1,135 @@
+﻿@model CLMS.Model.OrganModel
+
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 组织管理";
+    ViewBag.MainTitle = "基础信息管理";
+    ViewBag.SecondTitle = "组织线路配置";
+    Layout = "~/Views/Shared/_Layout_LineConfig.cshtml";
+
+}
+@section CSSs{
+    <link href="/plugins/kindeditor/default/default.css" rel="stylesheet" />
+    <link href="/plugins/select2/css/select2.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">组织管理-添加</h3>        
+    </div>
+    <form id="addForm" role="form">
+        <div class="box-body">
+            <div id="alertDiv">
+
+            </div>
+
+            <div class="row">
+                @Html.HiddenFor(m => m.ParentId)
+
+                <div class="form-group  col-md-6">
+                    <label for="Username">
+                        组织名称*
+                    </label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control required", @placeholder = "组织名称" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="Description">
+                        描述
+                    </label>
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control", @placeholder = "描述" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="Description">
+                        短信联系人
+                    </label>
+                    @*@Html.TextBoxFor(m => m.Description, new { @class = "form-control", @placeholder = "短信联系人(可多选)" })*@
+                    @Html.ListBoxFor(m => m.SMSTelephone, new MultiSelectList(ViewDatas.GetInstance().GetSMSTelbook(), "Value", "Text"), new { @class = "form-control select2-multiple" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="ParentOrganizationName">
+                        父级名称*
+                    </label>
+                    @Html.TextBoxFor(m => m.ParentOrganizationName, new { @class = "form-control", @placeholder = "父级名称", @readonly = true })
+                </div>
+            </div>
+
+            <div class="box-footer">
+                <a type="button" class="btn btn-default pull-right" href="javascript:Close();">取消</a>
+                <button type="button" style="margin-right: 10px" onclick="SubmitForm();" class="btn btn-primary pull-right">
+                    提交
+                </button>
+            </div>
+
+        </div>
+    </form>
+    <!-- /.box-body -->
+</div>
+@section javascripts{
+
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+    <script src="/plugins/plupload/plupload.full.min.js"></script>
+    <script src="/plugins/kindeditor/kindeditor-all.js"></script>
+    <script src="/plugins/select2/js/select2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2-multiple').select2({
+                placeholder: "短信联系人"
+            });
+        });
+        var editor;
+        StartValidate('addForm');
+
+
+        function SubmitForm() {
+
+            if ($('#addForm').valid()) {
+                $('#alertDiv').empty();
+
+                console.log($('#addForm').serialize());
+                var smstelephone="";
+                $(".select2-multiple").each(function () {
+                    smstelephone+=$(this).val();
+                });
+                var model = {
+                    ParentId: $("input[name='ParentId']").val(),
+                    Name: $("input[name='Name']").val(),
+                    Description: $("input[name='Description']").val(),
+                    SMSTelephone: smstelephone
+                }
+               
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Organization/Add",
+                    data: model,//$('#addForm').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('添加成功！');
+                            setTimeout(Close, 1000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function Close() {
+            //window.location.href = '/Organization/Index';
+            parent.layer.closeAll()
+        }
+    </script>
+
+
+}

@@ -1,0 +1,6 @@
+{
+  "projects": [ "src", "test", "../../Common/ZZBFBY.CommonTools_Core/src", "../../../Common/ZZBFBY.CommonTools_Core/src" ],
+  "sdk": {
+    "version": "1.0.0-preview2-003131"
+  }
+}

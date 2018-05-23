@@ -1,0 +1,14 @@
+#:F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\Common\ZZBFBY.CommonTools_Core\src\ZZBFBY.CommonTools_Core.IPHelper\ZZBFBY.CommonTools_Core.IPHelper.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\Common\ZZBFBY.CommonTools_Core\src\ZZBFBY.CommonTools_Core.Cryptography\ZZBFBY.CommonTools_Core.Cryptography.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Model\CLMS.Model.xproj
+#:F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.ManageSite\CLMS.ManageSite.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Model\CLMS.Model.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\Common\ZZBFBY.CommonTools_Core\src\ZZBFBY.CommonTools_Core.IPHelper\ZZBFBY.CommonTools_Core.IPHelper.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Business\CLMS.Business.xproj|F:\GitTest\Common\ZZBFBY.CommonTools_Core\src\ZZBFBY.CommonTools_Core.Cryptography\ZZBFBY.CommonTools_Core.Cryptography.xproj
+F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.DataProvider\CLMS.DataProvider.xproj|F:\GitTest\CLMS\CLMS\CLMS\src\CLMS.Model\CLMS.Model.xproj

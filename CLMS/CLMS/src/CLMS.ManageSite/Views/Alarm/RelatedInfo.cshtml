@@ -1,0 +1,273 @@
+﻿
+@{
+    Layout = "";
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 联合查询";
+}
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <!-- 主题 -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" />
+    <!-- 皮肤-->
+    <link rel="stylesheet" href="/css/skins/_all-skins.min.css" />
+    <!-- 提示框 -->
+    <link href="/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="/plugins/treeview/css/bootstrap-treeview.css" rel="stylesheet" />
+    <style>
+        #AlarmList {
+            list-style: none;
+            width: 95%;
+            height: 90%;
+        }
+
+            #AlarmList li {
+                width: 95%;
+                height: 40px;
+                box-sizing: border-box;
+                line-height: 40px;
+                text-align: left;
+                border-bottom: solid 1px #f0f0f0;
+                color: black;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+        .a {
+            color: black;
+        }
+
+        #infoIP {
+            list-style: none;
+            width: 100%;
+            height: 100%;
+            padding-left: 0px;
+        }
+
+            #infoIP li {
+                width: 100%;
+                height: 60px;
+                box-sizing: border-box;
+                /*line-height: 35px;*/
+                text-align: left;
+                /*border-bottom: solid 1px #f0f0f0;*/
+                color: black;
+                padding-right: 10px;
+                margin-top: 5px;
+            }
+    </style>
+</head>
+
+
+<body class="skin-blue sidebar-mini fixed">
+    <div class="row">
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo" href="/home/index">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">CLMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">@ViewDatas.GetInstance().GetSysName()</span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+            </nav>
+        </header>
+    </div>
+    <div class="box box-primary" style="padding-top: 50px;height:95%">
+        <div class="box-header with-border">
+            <h3 class="box-title">部门-线路-告警 联合查询</h3>
+            <div class="box-tools">
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="alertDiv"></div>
+            <div id="tb" class="form-inline">
+                <form id="searchForm">
+                    <input type="hidden" id="hideOrganId" name="OrganizationId" value="@ViewBag.Organ.Id" />
+                    <input type="hidden" id="hideLineId" name="LineId" />
+                    <input type="hidden" id="hideLineIP" name="LineIP" />
+                </form>
+            </div>
+            <div class="row ">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">部门</h3>
+                        <h3 class="box-title" style="font-weight:  500" id="OrganName"></h3>
+                        <h3 class="box-title">对应的线路列表</h3>
+                    </div>
+                    <form id="lineForm" class="form-inline">
+                        <table id="table" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                               data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true"
+                               data-method="post" 
+                               data-id-field="Id" data-height="650">
+                            <thead>
+                                <tr class="active">
+                                    <th data-field="Name">
+                                        线路名称
+                                    </th>
+                                    <th data-field="LineIP">
+                                        线路IP
+                                    </th>
+                                    <th data-field="ConnectState" data-formatter="stateFormatter">
+                                        状态
+                                    </th>
+                                    <th data-formatter="operatorFormatter" data-align="center">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </form>
+                </div>
+                <div class="col-sm-6">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">线路</h3>
+                        <h3 class="box-title" style="font-weight:  500" id="LineName"></h3>
+                        <h3 class="box-title">对应的告警列表</h3>
+                    </div>
+                    <form id="alarmForm" class="form-inline">
+                        <table id="table2" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                               data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true" data-query-params="Setparams"
+                               data-method="post" data-side-pagination="server"
+                               data-id-field="Id" data-height="650"
+                               data-pagination="true" data-page-size="25" data-page-list="[25,50,100,200]">
+                            <thead>
+                                <tr class="active">
+
+                                    <th data-field="FirstTime">
+                                        最早告警时间
+                                    </th>
+                                    <th data-field="LastTime">
+                                        最后告警时间
+                                    </th>
+                                    <th data-field="AlarmCount" data-align="center">
+                                        告警次数
+                                    </th>
+                                    <th data-field="Type">
+                                        告警类型
+                                    </th>
+                                    <th data-field="State" data-formatter="alarmStateFormatter">
+                                        状态
+                                    </th>
+                                    <th data-formatter="alarmOperatorFormatter" data-align="center">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.box-body -->
+
+    </div>
+    <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/js/EasyCustom.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+    <script src="/plugins/layer/layer.min.js"></script>
+    <script src="/plugins/treeview/js/bootstrap-treeview.js"></script>
+    <script>
+        StartValidate('searchForm');
+
+        function myfunction() {
+    
+        }
+
+        function alarmOperatorFormatter(value, row) {
+            if (!row.Confirm) {
+                return "<a type=\"button\" title=\"确认告警\" class=\"glyphicon glyphicon-list-alt text-orange\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>";
+            }
+        }
+
+        function operatorFormatter(value, row) {
+            return "<a type=\"button\" title=\"联查告警\" class=\"glyphicon glyphicon-hand-right text-orange\" href=\"javascript:searchAlarmDetail('" + row.Id + "','" + row.LineIP + "')\"></a>";
+        }
+
+        function stateFormatter(value, row) {
+            if (row.ConnectState == '断开') {
+                return '<span class="text-red">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+
+        function openAlarmDetail(id, confirm) {
+
+            layer.confirm('是否确认选中告警？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Alarm/SolveAlarm",
+                    data: { alarmId: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            selectTable();
+
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            });
+        }
+
+        function alarmStateFormatter(value, row) {
+            if (row.State == '正在告警') {
+                //正在告警
+                return '<span class="text-red">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+
+        function searchAlarmDetail(id, ip) {
+            $('#hideLineIP').val(ip);
+            $('#LineName').html(ip);
+
+            selectTable();
+        }
+
+
+        function selectTable() {
+            $('#table2').bootstrapTable('refresh', {
+                url: '/Alarm/Search'
+            });
+        }
+
+        function Setparams(params) {
+            var a = { limit: params.limit, offset: params.offset };
+            var d = { organizationId:@ViewBag.Organ.Id,lineIP:$('#hideLineIP').val()};
+            var c = $.extend(a, d);
+            return c;
+        }
+
+    </script>
+
+</body>
+</html>
+

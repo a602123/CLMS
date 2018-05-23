@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 告警管理";
+    ViewBag.MainTitle = "通讯线路管理";
+    ViewBag.SecondTitle = "告警管理";
+    ViewBag.Menu1 = "menuLine";
+    ViewBag.Menu2 = "menuLineAlarm";
+}
+@section CSSs{
+    <link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="/plugins/bootstrap-submenu/css/bootstrap-submenu.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">告警列表</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="alertDiv"></div>
+        <div id="tb" class="form-inline">
+            <form id="searchForm">
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" name="organizationName" placeholder="部门名称" />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="Name" placeholder="线路名称" />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="LineIP" placeholder="线路IP" />
+                </div>
+                @*@{
+                        var user = ViewDatas.GetInstance().GetUser(Context.Request);
+                        if (user.RoleId == CLMS.Model.UserType.SysAdmin)
+                        {
+                            @Html.DropDownList("OrganizationId", ViewDatas.GetInstance().GetOrganizationList(), "选择组织机构", new { @Id = "OrganizationId", @class = "form-control", @name = "OrganizationId" })
+                        }
+                    }*@
+
+                <a class="btn btn-default" onclick="selectTable();return false;">搜索</a>
+            </form>
+        </div>
+        <form id="ipForm" class="form-inline">
+            <table id="table" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                   data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true" data-query-params="Setparams"
+                   data-method="post" data-url="/Alarm/Search" data-side-pagination="server"
+                   data-id-field="Id" data-height="650"
+                   data-pagination="true" data-page-size="25" data-page-list="[25,50,100,200]">
+                <thead>
+                    <tr class="active">
+                        <th data-field="LineName">
+                            线路名称
+                        </th>
+                        <th data-field="IP">
+                            线路IP
+                        </th>
+                        <th data-field="OrganName">
+                            所属机构
+                        </th>
+                        <th data-field="Type">
+                            告警类型
+                        </th>
+                        <th data-field="FirstTime">
+                            最早告警时间
+                        </th>
+                        <th data-field="LastTime">
+                            最后告警时间
+                        </th>
+                        <th data-field="AlarmCount" data-align="center">
+                            告警次数
+                        </th>
+                        <th data-field="State" data-formatter="stateFormatter">
+                            状态
+                        </th>
+                        <th data-formatter="operatorFormatter" data-align="center">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+    </div>
+    <!-- /.box-body -->
+
+</div>
+@section javascripts{
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/plugins/bootstrap-submenu/js/bootstrap-submenu.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+
+    <script>
+        StartValidate('searchForm');
+        $('[data-submenu]').submenupicker();
+        function OnSelect(id, name) {
+            $('#txtOrganName').val(name);
+            $('#hideOrganId').val(id);
+        }
+        function operatorFormatter(value, row) {
+            if (!row.Confirm) {
+                //<a class=\"btn btn-block btn-warning btn-xs\" onclick=\"selectTable();return false;\">确认告警</a>
+                return "<a type=\"button\" title=\"确认告警\" class=\"glyphicon glyphicon-list-alt text-orange\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>";
+            }
+            //else {
+            //    return "<a type=\"button\" title=\"详情\" class=\"glyphicon glyphicon-list-alt\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>";
+            //}
+        }
+
+
+        function stateFormatter(value, row) {
+            if (row.State == '正在告警') {
+                //正在告警
+                return '<span class="text-red">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+
+        function openAlarmDetail(id, confirm) {
+
+            layer.confirm('是否确认选中告警？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Alarm/SolveAlarm",
+                    data: { alarmId: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            });
+        }
+
+
+        function selectTable() {
+            $('#table').bootstrapTable('refresh', {});
+        }
+
+        function Setparams(params) {
+            var a = { limit: params.limit, offset: params.offset };
+            var d = $('#searchForm').serializeJson();
+            var c = $.extend(a, d);
+            return c;
+        }
+
+    </script>
+}

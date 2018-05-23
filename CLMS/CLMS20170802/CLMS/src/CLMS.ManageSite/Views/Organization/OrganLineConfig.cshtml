@@ -1,0 +1,215 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 用户管理";
+    ViewBag.MainTitle = "基础信息管理";
+    ViewBag.SecondTitle = "组织线路配置";
+    ViewBag.Menu1 = "menuInfo";
+    ViewBag.Menu2 = "menuInfoOrgan";
+}
+@section CSSs{
+    <link href="/plugins/jquery.splitter/css/jquery.splitter.css" rel="stylesheet" />
+    <link href="/plugins/angular-treegrid-directive/treeGrid.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+}
+<div class="box box-primary">@*class="box box-primary"*@
+    <div class="box-header with-border">
+        <h3 class="box-title">组织线路总览</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="a" > @*class="row"*@
+
+            <div style="width:40%">       @*class="col-md-4"*@          
+                    <div class="box-body">
+                        <div ng-app="treeGridTest">
+                            <div ng-controller="treeGridController">
+
+                                <div id="tb" class="form-inline">
+                                    @*<a class="btn btn-default btn-sm" href="/Organization/Add/0">添加一级节点</a>*@
+
+                                    <button ng-click="my_tree.expand_all()" class="btn btn-default btn-sm" id="btnExpand">全部展开</button>
+                                    <button ng-click="my_tree.collapse_all()" class="btn btn-default btn-sm">全部收起</button>
+                                    <input class="pull-right col-md-3 col-sm-4  " type="text" data-ng-model="filterString" placeholder="查询" />
+                                </div>
+
+                                <div style="border:1px solid #e4eaec;margin-top:10px">
+                                    <tree-grid tree-data="tree_data" expand-on="expanding_property" tree-control="my_tree" col-defs="col_defs"></tree-grid>
+                                </div>
+                                @*expand-to= "expand_to" expand-level= "3"*@
+                            </div>
+                        </div>
+                    </div>                
+            </div>
+            <div style="width:60%">@*class="pull-right col-md-8"*@
+                <div class="box-body">
+                    <input type="hidden" id="organizationId" />
+                        <div class="box-header with-border">
+                            <h3 class="box-title">组织</h3>
+                            <h3 class="box-title" style="font-weight:  700" id="OrganName"></h3>
+                            <h3 class="box-title">对应的线路列表</h3>
+                        </div>
+                        <div id="tbl" class="form-inline">                           
+                            <a class="btn btn-default pull-left col-sm-2" href="javascript:addLine()">添加</a>
+                        </div>
+                        <table id="table" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                               data-click-to-select="true"  data-mobile-responsive="true" data-query-params="Setparams"
+                               data-method="post" data-url="/Line/GetLinesByOrganId" data-striped="true"
+                               data-id-field="id">
+                            <thead>
+                                <tr>
+                                    <th data-field="Name">
+                                        线路名称
+                                    </th>
+                                    <th data-field="LineIP">
+                                        线路IP
+                                    </th>
+                                    <th data-field="Description">
+                                        线路描述
+                                    </th>
+                                    <th data-field="LineType">
+                                        线路类型
+                                    </th>
+                                    <th data-field="ServiceProvider">
+                                        线路运营商
+                                    </th>
+                                    <th data-field="OrganizationName">
+                                        所属机构
+                                    </th>
+                                    <th data-field="ConnectState" data-formatter="stateFormatter">
+                                        实时连通状态
+                                    </th>
+                                    <th data-formatter="operatorFormatter" data-align="center">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section javascripts{
+
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/plugins/jquery.splitter/js/jquery.splitter.js"></script>
+    <script src="/plugins/Angular/js/angular.js"></script>
+    <script src="/plugins/angular-treegrid-directive/tree-grid-directive.js"></script>
+    <script src="/js/Pages/Organ-Index1.js"></script>
+    <script>
+        $('#a').height($('body').height() - 50);
+        $('#a').split({ orientation: 'vertical', position: '30%' });
+        $(document).ready(function () {           
+            $("#btnExpand").click();
+        });
+
+        function operatorFormatter(value, row) {
+            return "<a type=\"button\" title=\"编辑\" class=\"glyphicon glyphicon-pencil\" href=\"javascript:editLine(" + row.Id + ")\"></a><a style=\"margin-left:10px\" type=\"button\" title=\"删除\" class=\"glyphicon glyphicon-trash\"  href=\"javascript:delLine(" + row.Id + ",'"+row.Name+"')\"></a>   ";
+        }
+
+        function stateFormatter(value, row) {
+            if (row.ConnectState == '连通') {
+                //连通
+                return '<span class="text-green">' + value + '</span>';
+            } else {
+                return '<span class="text-gray">' + value + '</span>';
+            }
+        }
+
+        function searchLineDetail(organId, name) {
+            $('#organizationId').val(organId)
+            $('#OrganName').text(name)
+            selectTable(organId)
+            //layer.msg('organId' + organId);
+        }
+
+        function selectTable(organId)
+        { 
+            $('#table').bootstrapTable('refresh', {                              
+            });
+        }
+        function Setparams(params) {
+            //var a = { limit: params.limit, offset: params.offset };
+            //var b = { organizationId: 43 };
+            //var c = $.extend(a, b);
+            //return c;
+            var a = { organizationId: $('#organizationId').val() }
+            return a;
+        }
+        function editOrgan(organId) {            
+            //layer.open({
+            //    type: 2,
+            //    skin: 'layui-layer-rim',
+            //    area: ['800px','600px'],
+            //    content: '/Organization/Edit/' + organId,
+            //})
+            var url = '/Organization/Edit/' + organId;
+            var area = ['800px', '600px'];
+            layerOpen(url,area);
+        }
+        function addOrgan(organId) {
+            var url = '/Organization/Add/' + organId;
+            var area = ['800px', '600px'];
+            layerOpen(url, area);
+        }
+        function addLine() {
+            var organId = $('#organizationId').val();            
+            if (organId != "") {
+                //layer.msg('organid:' + organId)
+                var url = '/Line/Add/'+organId;
+                var area = ['800px', '900px'];
+                layerOpen(url, area);
+            }
+        }
+        function editLine(lineId)
+        {
+            var url = '/Line/Edit/' + lineId;
+            var area = ['800px', '900px'];
+            layerOpen(url, area);
+        }
+
+        function delLine(lineId, linename) {
+            layer.confirm("确认删除'" + linename + "'这条线路么？", {btn:['确认','取消']}, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Line/Del",
+                    data: { ids: lineId },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg("删除成功");
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            },function() {
+    
+            });
+
+        }
+        
+        function layerOpen(url, area){
+            layer.open({
+                title: '',
+                type: 2,
+                skin: 'layui-layer-rim',
+                area: area,//['800px', '600px'],
+                content: url, //'/Organization/Edit/' + organId,
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+    </script>
+}

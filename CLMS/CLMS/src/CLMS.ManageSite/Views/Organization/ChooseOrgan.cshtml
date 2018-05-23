@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+
+}
+<link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+<link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/AdminLTE.min.css" />
+
+<link href="/plugins/angular-treegrid-directive/treeGrid.css" rel="stylesheet" />
+<link href="/plugins/treeview/css/bootstrap-treeview.css" rel="stylesheet" />
+
+<div class="box box-comment">
+    <div class="box-header with-border">
+        <h3 class="box-title">组织列表</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+
+    <div class="box-body">
+        <div class="form-inline">
+            <form id="form">
+                <input type="text" id="txtOrganName" class="form-control" placeholder="请选择组织" />
+                <input type="hidden" id="hiddenOrganId" />
+                <a class="btn btn-default" href="javascript:Choose();">选中</a>
+            </form>
+        </div>
+        <div id="tree"></div>
+    </div>
+    <!-- /.box-body -->
+</div>
+<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.js"></script>
+<script src="/plugins/layer/layer.min.js"></script>
+<script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/EasyCustom.js"></script>
+
+
+@*<script src="/plugins/Angular/js/angular.js"></script>
+    <script src="/plugins/angular-treegrid-directive/tree-grid-directive.js"></script>
+    <script src="/js/Pages/Organ-ChooseOrgan.js"></script>*@
+<script src="/plugins/treeview/js/bootstrap-treeview.js"></script>
+<script>
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    $(document).ready(function () {
+        $.ajax({
+            type: "Get",
+            url: "/organization/getlistforselect",
+            dataType: 'json',
+            success: function (data) {
+                $('#tree').treeview({
+                    data: data,
+                    onNodeSelected: function (event, dataItem) {
+                        if (dataItem.href != "0") {
+                            $("#txtOrganName").val(dataItem.text);
+                            $("#hiddenOrganId").val(dataItem.id);
+                        }
+                    }
+                });
+            },
+            error: function () {
+                var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                $('#alertDiv').append(alertDiv);
+            }
+        });
+    });
+
+
+    function Choose() {
+        if ($("#txtOrganName").val() != "") {
+            parent.$('#OrganSelect').val($("#txtOrganName").val());
+            parent.$('#hiddenOrganId').val($("#hiddenOrganId").val());
+        }
+
+        parent.layer.close(index);
+    }
+</script>
+
+
+

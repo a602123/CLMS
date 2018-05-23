@@ -1,0 +1,186 @@
+﻿@model CLMS.Model.LineModel
+
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 线路管理";
+    ViewBag.MainTitle = "基础信息管理";
+    ViewBag.SecondTitle = "组织线路配置";
+    Layout = "~/Views/Shared/_Layout_LineConfig.cshtml";
+}
+@section CSSs{
+    <link href="/plugins/kindeditor/default/default.css" rel="stylesheet" />
+    <link href="/plugins/bootstrap-submenu/css/bootstrap-submenu.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">线路信息管理-添加</h3>        
+    </div>
+    <form id="addForm" role="form">
+        <div class="box-body">
+            <div id="alertDiv">
+
+            </div>
+
+            <div class="row">
+                <div class="form-group  col-md-6">
+                    <label for="Username">
+                        线路名称*
+                    </label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control required", @placeholder = "线路名称" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="Password">
+                        线路IP*
+                    </label>
+                    @Html.TextBoxFor(m => m.LineIP, new { @class = "form-control required ", @maxlength = "20", @placeholder = "线路IP" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RealName">
+                        线路描述
+                    </label>
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control", @placeholder = "线路描述" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        线路类型*
+                    </label>
+                    @Html.DropDownListFor(m => m.LineType, ViewDatas.GetInstance().GetLineTypeList(), "请选择", new { @class = "form-control required" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        运营商*
+                    </label>
+                    @Html.DropDownListFor(m => m.ServiceProvider, ViewDatas.GetInstance().GetServiceProviderList(), "请选择", new { @class = "form-control required" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        组织机构*
+                    </label>
+                    @*@Html.DropDownList("OrganizationId", ViewDatas.GetInstance().GetOrganizationList(), "选择组织机构", new { @Id = "OrganizationId", @class = "form-control required", @name = "OrganizationId" })*@
+                    @*<div class="input-group ">
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default
+        dropdown-toggle" data-toggle="dropdown" data-submenu="">
+                选择部门
+                <span class="caret"></span>
+            </button>
+            @ViewDatas.GetInstance().GetOrganSubMeun("OnSelect", new Dictionary<string, string>() { { "style", "overflow:visible" } })
+        </div><!-- /btn-group -->
+        <input type="text" id="txtOrganName"name="OrganizationName" readonly="readonly" class="form-control required" />
+        <input type="hidden" id="hideOrganId" name="OrganizationId" />
+    </div><!-- /input-group -->*@
+                    @Html.TextBoxFor(m=>m.OrganizationName,new { @class= "form-control required",@readonly= "readonly" })
+                    @Html.HiddenFor(m=>m.OrganizationId)
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        Ping包的大小(byte)
+                    </label>
+                    @Html.TextBoxFor(m => m.Pingsize, new { @class = "form-control", @placeholder = "Ping包的大小,默认32字节", @value = "32" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        轮询Ping的次数
+                    </label>
+                    @Html.TextBoxFor(m => m.Pingtimes, new { @class = "form-control", @placeholder = "轮询ping的次数，默认4次" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        超时时间(秒)
+                    </label>
+                    @Html.TextBoxFor(m => m.Timeout, new { @class = "form-control", @placeholder = "默认超时时间，2 秒" })
+                </div>
+
+                <div class="form-group  col-md-6">
+                    <label for="RoleList">
+                        轮询周期
+                    </label>
+                    @Html.TextBoxFor(m => m.PingInterval, new { @class = "form-control", @placeholder = "轮询周期，默认30秒" })
+                </div>
+
+
+                <div class="form-group  col-md-6">
+                    <label for="AlarmMax">
+                        产生告警阈值
+                    </label>
+                    @Html.TextBoxFor(m => m.AlarmMax, new { @class = "form-control", @placeholder = "出现错误卡到阈值(默认为3次)，生成告警并推送" })
+                </div>
+
+
+                <div class="box-footer">
+                    <a type="button" class="btn btn-default pull-right" href="javascript:Close();">取消</a>
+                    <button type="button" style="margin-right: 10px" onclick="SubmitForm();" class="btn btn-primary pull-right">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /.box-body -->
+</div>
+@section javascripts{
+
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+    <script src="/plugins/plupload/plupload.full.min.js"></script>
+    <script src="/plugins/kindeditor/kindeditor-all.js"></script>
+    <script src="/plugins/bootstrap-submenu/js/bootstrap-submenu.js"></script>
+
+    <script>
+        var editor;
+        StartValidate('addForm');
+        $('[data-submenu]').submenupicker();
+        function OnSelect(id, name) {
+            $('#txtOrganName').val(name);
+            $('#hideOrganId').val(id);
+        }
+        function SubmitForm() {
+
+            if ($('#addForm').valid()) {
+                $('#alertDiv').empty();
+
+                console.log($('#addForm').serialize());
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Line/Add",
+                    data: $('#addForm').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.confirm('添加成功！继续添加？', {
+                                btn: ['继续', '退出'] //按钮
+                            }, function () {
+                                location.href = '/Line/Add/' + data.OrganId;
+                                //layer.msg("data.OrganId:" + data.OrganId)
+                            }, function () {
+                                Close();
+                            });
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function Close() {
+            //location.href = '/Line/Index';
+            parent.layer.closeAll()
+        }
+    </script>
+}

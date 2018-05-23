@@ -1,0 +1,18 @@
+﻿.DoughnutChartBorder {
+    border-right: 1px solid #f4f4f4;
+    border-bottom: 1px solid #f4f4f4;
+    padding-top: 10px;
+}
+
+.statistics-box-footer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top: 0px solid #ffffff;
+    padding-bottom: 10px;
+    padding-top: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #ffffff;
+}

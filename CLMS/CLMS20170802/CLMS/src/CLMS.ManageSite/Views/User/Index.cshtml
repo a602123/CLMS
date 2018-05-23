@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 用户管理";
+    ViewBag.MainTitle = "系统设置";
+    ViewBag.SecondTitle = "用户管理";
+    ViewBag.Menu1 = "menuSys";
+    ViewBag.Menu2 = "menuSysUser";
+}
+@section CSSs{
+    <link href="~/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">用户列表</h3>
+        <div class="box-tools">
+        </div>
+    </div>
+    <div class="box-body">
+
+        <div id="tb" class="form-inline">
+
+            <a class="btn btn-default" href="#search" data-toggle="collapse">查询</a>
+
+            <a class="btn btn-default" href="/User/Add">添加</a>
+            <a class="btn btn-default" href="javascript:Del()">删除</a>
+            <form id="search" action="#" class="collapse well well-sm">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="Username" placeholder="用户名称" />
+                    </div>
+                    <button type="button" class="btn btn-default" onclick="selectTable();return false;">
+                        查询
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <table id="table" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+               data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true" data-query-params="Setparams"
+               data-side-pagination="server" data-method="post" data-url="/User/Search"
+               data-id-field="id" data-height="650"
+               data-pagination="true" data-page-size="25" data-page-list="[25,50,100,200]">
+            <thead>
+                <tr class="active">
+                    <th data-field="" data-checkbox="true">
+                    </th>
+                    <th data-field="Username">
+                        用户名称
+                    </th>
+                    <th data-field="Email">
+                        Email
+                    </th>
+                    <th data-field="Telphone">
+                        电话
+                    </th>
+                    <th data-field="RealName">
+                        真实姓名
+                    </th>
+                    <th data-field="OrganName">
+                        所属部门
+                    </th>
+                    <th data-field="State" data-formatter="stateFormatter">
+                        状态
+                    </th>
+                    <th data-field="RoleName">
+                        角色
+                    </th>
+                    <th data-formatter="operatorFormatter" data-align="center">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>
+@section javascripts{
+
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+
+        function stateFormatter(value, row) {
+            if (value == "1") {
+                return ' <span >正常</span>';
+            }
+            else if (value == "0") {
+                return '<span style="color:red">禁用</span>';
+            }
+            else {
+                return value;
+            }
+        }
+
+        function operatorFormatter(value, row) {
+            if (row.State == "1") {
+                return "<a type=\"button\" title=\"编辑\" class=\"glyphicon glyphicon-pencil\" href=\"/User/Edit/" + row.Id + "\"></a> <a style=\"margin-left:10px\" type=\"button\" title=\"禁用\" class=\"glyphicon glyphicon-ban-circle text-red\"  href=\"javascript:Ban(" + row.Id + ",'" + row.Username + "','禁用')\"></a>  ";
+            } else {
+                return "<a type=\"button\" title=\"编辑\" class=\"glyphicon glyphicon-pencil\" href=\"/User/Edit/" + row.Id + "\"></a> <a style=\"margin-left:10px\" type=\"button\" title=\"启用\" class=\"glyphicon glyphicon-ok-circle\"  href=\"javascript:Ban(" + row.Id + ",'" + row.Username + "','启用')\"></a>  ";
+            }
+        }
+
+
+        function selectTable() {
+            $('#table').bootstrapTable('refresh', {
+                query: $('#search').serializeJson()
+            });
+        }
+
+        function Setparams(params) {
+            var a = { limit: params.limit, offset: params.offset };
+            var b = $('#search').serializeJson();
+            var c = $.extend(a, b);
+            return c;
+        }
+
+        function Del() {
+            var selected = $('#table').bootstrapTable('getSelections');
+            var idArray = new Array();
+            $(selected).each(
+            function () {
+                idArray.push(this.Id);
+            });
+
+            layer.confirm('确认删除选中的' + selected.length + '条项目？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/User/Del",
+                    data: { ids: idArray },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg("删除成功");
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }, function () {
+            });
+        }
+
+
+        function Ban(id, username,type) {
+            layer.confirm('确认' + type + ' ' + username + ' 用户？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/User/Ban",
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg(type+"成功");
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }, function () {
+            });
+        }
+
+    </script>
+}
+
+
+
+

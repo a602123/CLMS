@@ -1,0 +1,305 @@
+﻿
+@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 配置参数";
+    ViewBag.MainTitle = "系统设置";
+    ViewBag.SecondTitle = "配置参数";
+    ViewBag.Menu1 = "menuSys";
+    ViewBag.Menu2 = "menuSysData";
+
+    Dictionary<string, string> configs = ViewBag.Configs;
+
+
+}
+@section CSSs{
+    <link href="~/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+}
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+
+                    <li class="active">
+                        <a href="#divSysConfig" data-toggle="tab">系统配置</a>
+                    </li>
+                    <li class="pull-left header">
+                        <i class="fa fa-server"></i>
+                        配置参数
+                    </li>
+                </ul>
+                <div class="tab-content no-padding ">
+                    <div id="alertDiv">
+
+                    </div>
+                    <div class="chart tab-pane active" id="divSysConfig">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">系统信息配置</h3>
+                                        <div class="box-tools">
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <form class="form-horizontal" id="formSysConfig">
+                                            <div class="form-group">
+                                                <label for="SysName" class="col-sm-4 control-label">系统名称</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" name="SysName" value="@ViewDatas.GetInstance().GetDicValue("SysName",configs)" placeholder="系统名称">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="OnLineDays" class="col-sm-4 control-label">根结点名称</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" name="RootName" value="@ViewDatas.GetInstance().GetDicValue("RootName", configs)" placeholder="根结点名称">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="OnLineDays" class="col-sm-4 control-label">默认重置密码</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" name="DefaultPassword" value="@ViewDatas.GetInstance().GetDicValue("DefaultPassword", configs)" placeholder="默认重置密码">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-4 col-sm-8">
+                                                    <button type="button" class="btn btn-danger" onclick="SaveSysConfig();">保存</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">授权配置</h3>
+                                        <div class="box-tools">
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <form class="form-horizontal" id="formLicenceConfig">
+
+                                            <div class="form-group">
+                                                <label for="SysCode" class="col-sm-4 control-label">授权码</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" name="SysCode" id="inputOnLineDays" value="@ViewDatas.GetInstance().GetDicValue("SysCode", configs)" placeholder="授权码">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="LicenceNumber" class="col-sm-4 control-label">授权数</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" name="LicenceNumber" value="@ViewDatas.GetInstance().GetDicValue("LicenceNumber", configs)" placeholder="授权数">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="LicenceState" class="col-sm-4 control-label">授权状态</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" readonly name="LicenceState" value="@ViewDatas.GetInstance().GetDicValue("LicenceState", configs)" placeholder="机器码">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="MachineCode" class="col-sm-4 control-label">机器码</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control  required" readonly name="MachineCode" value="@ViewDatas.GetInstance().GetDicValue("MachineCode", configs)" placeholder="机器码">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-4 col-sm-8">
+                                                    <button type="button" class="btn btn-danger" onclick="SaveLicenceConfig();">保存</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+@section javascripts{
+    <script src="/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/plugins/validate/messages_zh.min.js"></script>
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        var editor;
+        //StartValidate('formMonitorConfig');
+        //StartValidate('formAlarmConfig');
+        //StartValidate('formLicenceConfig');
+        StartValidate('formSysConfig');
+        StartValidate("formPingConfig");
+        function SaveSysConfig() {
+            if ($('#formSysConfig').valid()) {
+                $('#alertDiv').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Config/SysConfigEdit",
+                    data: $('#formSysConfig').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.State);
+                        if (data.State == true) {
+                            layer.msg('修改成功！');
+                            setTimeout(Fresh, 2000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function SaveLicenceConfig() {
+            if ($('#formLicenceConfig').valid()) {
+                $('#alertDiv').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Config/LicenceConfigEdit",
+                    data: $('#formLicenceConfig').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.State);
+                        if (data.State == true) {
+                            layer.msg('修改成功！');
+                            setTimeout(Fresh, 2000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+
+        function SaveMonitorConfig() {
+            if ($('#formMonitorConfig').valid()) {
+                $('#alertDiv').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Config/MonitorConfigEdit",
+                    data: $('#formMonitorConfig').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.State);
+
+                        if (data.State == true) {
+                            layer.msg('修改成功！');
+                            setTimeout(Fresh, 2000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function SaveAlarmConfig() {
+            if ($('#formAlarmConfig').valid()) {
+                $('#alertDiv').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Config/AlarmConfigEdit",
+                    data: $('#formAlarmConfig').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.State);
+                        if (data.State == true) {
+                            layer.msg('修改成功！');
+                            setTimeout(Fresh, 2000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                        $('#alertDiv').append(alertDiv);
+                    }
+                });
+            }
+        }
+
+        function SavePingConfig() {
+            if ($('#formPingConfig').valid()) {
+                $('#alertDiv').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Config/PingConfigEdit",
+                    data: $('#formPingConfig').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.State);
+                        if (data.State==true) {
+                            layer.msg('修改成功');
+                            setTimeout(Fresh,2000)
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv('网络错误，请重试！', 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    }
+                })
+            }
+        }
+
+        function Fresh() {
+            location.reload();
+        }
+
+
+    </script>
+}
+
+
+
+

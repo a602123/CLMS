@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14D6819E-8F0F-400A-ABC7-1A14E7DAF1B5}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CLMS.ManageSite", "src\CLMS.ManageSite\CLMS.ManageSite.xproj", "{5185F813-9C9B-4AE5-A8A4-18AC658B8880}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CLMS.Model", "src\CLMS.Model\CLMS.Model.xproj", "{EE2D7553-3918-4C3C-A446-E4940A3EB73F}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CLMS.Business", "src\CLMS.Business\CLMS.Business.xproj", "{07394D12-8C40-4DD4-9DC2-E72952E73F54}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CLMS.DataProvider", "src\CLMS.DataProvider\CLMS.DataProvider.xproj", "{956EE0F8-3B8C-41A3-AF85-3FC4EF513747}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CLMS.Test", "src\CLMS.Test\CLMS.Test.xproj", "{1E29C4E9-577A-485B-A79E-05EC458CF7D0}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ZZBFBY.CommonTools_Core.IPHelper", "..\..\..\Common\ZZBFBY.CommonTools_Core\src\ZZBFBY.CommonTools_Core.IPHelper\ZZBFBY.CommonTools_Core.IPHelper.xproj", "{71BF8577-491C-4826-9902-E7A7371B8A9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5185F813-9C9B-4AE5-A8A4-18AC658B8880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5185F813-9C9B-4AE5-A8A4-18AC658B8880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5185F813-9C9B-4AE5-A8A4-18AC658B8880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5185F813-9C9B-4AE5-A8A4-18AC658B8880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE2D7553-3918-4C3C-A446-E4940A3EB73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE2D7553-3918-4C3C-A446-E4940A3EB73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE2D7553-3918-4C3C-A446-E4940A3EB73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE2D7553-3918-4C3C-A446-E4940A3EB73F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07394D12-8C40-4DD4-9DC2-E72952E73F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07394D12-8C40-4DD4-9DC2-E72952E73F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07394D12-8C40-4DD4-9DC2-E72952E73F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07394D12-8C40-4DD4-9DC2-E72952E73F54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956EE0F8-3B8C-41A3-AF85-3FC4EF513747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956EE0F8-3B8C-41A3-AF85-3FC4EF513747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956EE0F8-3B8C-41A3-AF85-3FC4EF513747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956EE0F8-3B8C-41A3-AF85-3FC4EF513747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E29C4E9-577A-485B-A79E-05EC458CF7D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E29C4E9-577A-485B-A79E-05EC458CF7D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E29C4E9-577A-485B-A79E-05EC458CF7D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E29C4E9-577A-485B-A79E-05EC458CF7D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71BF8577-491C-4826-9902-E7A7371B8A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71BF8577-491C-4826-9902-E7A7371B8A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71BF8577-491C-4826-9902-E7A7371B8A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71BF8577-491C-4826-9902-E7A7371B8A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5185F813-9C9B-4AE5-A8A4-18AC658B8880} = {6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}
+		{EE2D7553-3918-4C3C-A446-E4940A3EB73F} = {6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}
+		{07394D12-8C40-4DD4-9DC2-E72952E73F54} = {6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}
+		{956EE0F8-3B8C-41A3-AF85-3FC4EF513747} = {6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}
+		{1E29C4E9-577A-485B-A79E-05EC458CF7D0} = {6DCDECCC-D0D7-4068-9C3B-5011AE1B0F04}
+	EndGlobalSection
+EndGlobal

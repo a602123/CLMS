@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "CLMS.DataProvider": "1.0.0-*",
+    "CLMS.Model": "1.0.0-*",
+    "Microsoft.AspNetCore.Http.Abstractions": "1.1.2",
+    "NETStandard.Library": "1.6.1",
+    "Newtonsoft.Json": "10.0.3",
+    "System.Net.NetworkInformation": "4.3.0",
+    "System.Net.Ping": "4.3.0",
+    "System.Threading.Tasks.Parallel": "4.3.0",
+    "ZZBFBY.CommonTools_Core.Cryptography": "1.0.0-*",
+    "System.Threading.Thread": "4.0.0",
+    "ZZBFBY.CommonTools_Core.IPHelper": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

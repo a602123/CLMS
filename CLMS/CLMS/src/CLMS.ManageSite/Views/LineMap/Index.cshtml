@@ -1,0 +1,667 @@
+﻿@{
+    Layout = "";
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 线路地图";
+}
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <!-- 主题 -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" />
+    <!-- 皮肤-->
+    <link rel="stylesheet" href="/css/skins/_all-skins.min.css" />
+    <!-- 提示框 -->
+    <link href="/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="/plugins/jquery.splitter/css/jquery.splitter.css" rel="stylesheet" />
+    <link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+
+
+    <style>
+        #infoIP {
+            list-style: none;
+            width: 100%;
+            height: 100%;
+            padding-left: 0px;
+        }
+
+            #infoIP li {
+                width: 100%;
+                height: 55px;
+                box-sizing: border-box;
+                /*line-height: 35px;*/
+                text-align: left;
+                border-bottom: solid 1px #f0f0f0;
+                color: black;
+                padding-right: 10px;
+                margin-top: 5px;
+            }
+    </style>
+</head>
+
+<body class="skin-blue sidebar-mini fixed" style="height: 100%;">
+    <div class="row">
+
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo" href="/home/index">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">CLMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">@ViewDatas.GetInstance().GetSysName()</span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+            </nav>
+        </header>
+    </div>
+    <div style="width:100%;height:100%;" id="divContainer">
+        <!--上边地图-->
+        <div id="madpContent" style="overflow-y:hidden;overflow-x:hidden">
+            <div style="position:absolute;width:20%;margin-top:50px">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">分行IP详情</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div clase="row">
+                            <div class="form-group  col-md-12 title" >
+                                <label>
+                                    名称
+                                </label>
+                                @*<input type="text" id="organNameTxt" value="" />*@
+                                &nbsp;&nbsp;&nbsp;<label id="organNameTxt"></label>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <label>
+                                    描述
+                                </label>
+                                @*<input type="text" id="organDesTxt" value="" />*@
+                                &nbsp;&nbsp;&nbsp;<label id="organDesTxt"></label>
+                            </div>
+                            <div class="form-group  col-md-12">
+                                <label>
+                                    所辖线路
+                                </label>
+                                <ul id="infoIP"></ul>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div>
+
+        <!--下边告警-->
+        <div style="overflow-y:hidden;border-bottom:1px solid #f0f0f0" id="alarmContent">
+            <table id="tableAlarm" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                   data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true"
+                   data-method="post" data-url="/Alarm/GetList" data-striped="true"
+                   data-id-field="Id">
+                <thead style="font-family:'SimHei';">
+                    <tr class="active">
+                        <th data-field="LineName" data-align="center">
+                            线路名称
+                        </th>
+                        <th data-field="IP" data-align="center">
+                            线路IP
+                        </th>
+                        <th data-field="OrganName" data-align="center">
+                            所属机构
+                        </th>
+                        <th data-field="Type" data-align="center">
+                            告警类型
+                        </th>
+                        <th data-field="FirstTime" data-align="center">
+                            最早告警时间
+                        </th>
+                        <th data-field="LastTime" data-align="center">
+                            最后告警时间
+                        </th>
+                        <th data-field="AlarmCount" data-align="center">
+                            告警次数
+                        </th>
+                        <th data-field="State" data-formatter="stateFormatter" data-align="center">
+                            状态
+                        </th>
+                        <th data-formatter="operatorFormatter" data-field="OrganId" data-align="center">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        @*<button onclick="TestColor()">1111111</button>*@
+    </div>
+
+
+
+    <!--js引用-->
+    <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <script src="/plugins/Threejs/Three.js"></script>
+    <script src="/plugins/Threejs/DragControls.js"></script>
+    <script src="/plugins/Threejs/CanvasRenderer.js"></script>
+    <script src="/plugins/Threejs/TrackballControls.js"></script>
+    <script src="/plugins/Threejs/ThreeBSP.js"></script>
+    <script src="/plugins/layer/layer.min.js"></script>
+    <script src="/plugins/Threejs/Projector.js"></script>
+    <script src="/plugins/Threejs/TweenMax.min.js"></script>
+    <script src="/plugins/jquery.splitter/js/jquery.splitter.js"></script>
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <script>
+        var container;
+        var camera, controls, scene, renderer, raycaster, mouse, INTERSECTED, directionalLight, CSSrenderer;
+        var objects = [];
+        var sDic = new Array();
+        var pDic = new Array();
+        var lineDic = new Array();
+        var isDrag = false;
+        var inDragId;
+        var next;//转动动画
+        var firstInit = false;
+
+        function initContainer() {
+            container = document.createElement('div');
+            $("#madpContent").append(container);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+        function initScene() {
+            scene = new THREE.Scene();
+        }
+        function initCamera() {
+            camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 50;
+            camera.up.x = 0;
+            camera.up.y = 1;
+            camera.up.z = 0;
+        }
+        function initRenderer() {
+            renderer = new THREE.CanvasRenderer();
+            renderer.setClearColor(0xf0f0f0);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize($("#madpContent").width(), window.innerHeight * 0.9);
+            //renderer.setSize(container.clientWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            //render();
+        }
+        function initLight() {
+            directionalLight = new THREE.DirectionalLight(0xffffff, 1, 100);
+            directionalLight.position.z = 15;
+            directionalLight.position.x = 10;
+            directionalLight.position.y = 0;
+
+            //Set up shadow properties for the light
+            directionalLight.shadow.mapSize.width = 512;  // default
+            directionalLight.shadow.mapSize.height = 512; // default
+            directionalLight.shadow.camera.near = 0.5;       // default
+            directionalLight.shadow.camera.far = 500      // default
+            scene.add(directionalLight);
+        }
+        function initCameraMoveControls() {
+            //轨迹球控制 鼠标左击旋转  右击平移 滚轮远近
+            controls = new THREE.TrackballControls(camera);
+            //旋转速度
+            controls.rotateSpeed = 1.0;
+            //变焦速度
+            controls.zoomSpeed = 0.5;
+            //平移速度
+            controls.panSpeed = 1;
+            //是否不变焦
+            controls.noZoom = false;
+            //是否不平移
+            controls.noPan = false;
+            controls.noRotate = true;
+            //可能是惯性 true没有惯性
+            controls.staticMoving = true;
+            //动态阻尼系数 就是灵敏度
+            controls.dynamicDampingFactor = 1;
+            controls.keys = [65, 83, 68];//??
+            controls.minDistance = 10;
+            controls.maxDistance = 70;
+        }
+        function initDragControls() {
+            var dragControls = new THREE.DragControls(objects, camera, renderer.domElement);
+            dragControls.addEventListener('dragstart', function (event) { isDrag = true; inDragId = event.object.nodeId; });
+            dragControls.addEventListener('dragend', function (event) {
+                //isDrag = false;
+
+                //console.log(inDragId);
+            });
+        }
+        function initRaycaster() {
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+
+        }
+
+        function initMap() {
+            $.ajax({
+                type: 'Get',
+                url: "/LineMap/GetMapUrl",
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.State == true) {
+                        var mapUrl = data.Map;
+                        var geometry = new THREE.PlaneGeometry(120, 90, 1, 1);//默认渲染的地图比例为4:3
+
+                        var texture = THREE.ImageUtils.loadTexture(mapUrl);
+                        texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;
+                        texture.mapping = THREE.UVMapping;
+                        var mat = new THREE.MeshBasicMaterial();
+                        mat.map = texture;//材质的Map属性用于添加纹理
+
+                        //var material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+                        var plane = new THREE.Mesh(geometry, mat);
+                        plane.position.set(0, 0, 0);
+                        scene.add(plane);
+                        directionalLight.target = plane;
+                    }
+                    else {
+                        layer.msg(data.Message);
+                    }
+                },
+                error: function () {
+                    layer.msg('网络错误，请重试！');
+                }
+            });
+
+
+
+        }
+        function initObjects() {
+            $.ajax({
+                type: 'Post',
+                url: "/Organization/GetPosition",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.State == true) {
+                        //console.log(data.Items);
+                        for (var i = 0; i < data.Items.length; i++) {
+                            CreateNode(data.Items[i].Id, data.Items[i].Name, data.Items[i].ParentId, data.Items[i].State, data.Items[i].X, data.Items[i].Y);
+                            if (data.Items[i].ParentId == 0) {
+                                FindNodeinMap(data.Items[i].Id);
+                            }
+                        }
+                        CreateLine();
+
+                        firstInit = true;
+                    }
+                    else {
+                        layer.msg(data.Message);
+                    }
+                },
+                error: function () {
+                    layer.msg('网络错误，请重试！');
+                }
+            });
+        }
+
+        function refreshObjectsState() {
+            //console.log(firstInit);
+            if (firstInit) {
+                $.ajax({
+                    type: 'Post',
+                    url: "/Organization/GetPosition",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            //console.log(data.Items);
+                            for (var i = 0; i < data.Items.length; i++) {
+                                UpdateNodeState(data.Items[i].Id, data.Items[i].State);
+                            }
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }
+        }
+
+        function UpdateNodeState(id, state) {
+            //console.log(sDic);
+            sDic[id].material.setValues(GetNodeStateMaterial(state));
+        }
+
+        function TestColor() {
+            sDic[44].material.setValues(GetNodeStateMaterial(5));
+        }
+
+
+        function CreateLine() {
+            var geometry;
+            var item;//父Node
+            var material;
+
+            for (var i = 0; i < objects.length; i++) {
+                if (objects[i].parentId != '0') {
+                    item = FindNodeByParentId(objects[i].parentId);
+                    geometry = new THREE.Geometry();
+                    geometry.vertices.push(
+                       objects[i].position,
+                        item.position
+                    );
+                    material = GetLineStateMaterial(objects[i].state);
+                    var line = new THREE.Line(geometry, material);
+
+                    line.name = objects[i].name;
+                    line.tag = 'line';
+                    line.nodeId = objects[i].nodeId;
+                    line.state = objects[i].state;
+                    line.parentId = objects[i].parentId;
+
+                    lineDic[objects[i].nodeId] = line;
+                    scene.add(line);
+                }
+            }
+        }
+
+        //查找父节点
+        function FindNodeByParentId(parentId) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objects[i].nodeId == parentId) {
+                    return objects[i];
+                }
+            }
+        }
+
+        //创建节点
+        function CreateNode(id, name, parent, state, x, y) {
+            //画字
+            var canvas1 = document.createElement('canvas');
+            canvas1.width = 200;//画板长度
+            canvas1.height = 20;
+            canvas1.style.backgroundColor = "white";
+            var context1 = canvas1.getContext('2d');
+            context1.font = "15px Microsoft YaHei";
+            var txt = name;
+            var a = context1.measureText(txt);//计算字体长度
+            context1.rect(0, 0, 200, 20);
+            context1.fillStyle = "white";
+            context1.fill();
+            context1.fillStyle = "rgba(0,0,0,1)";
+            context1.fillText(txt, (200 - a.width) / 2, 15);
+            // canvas contents will be used for a texture
+            var texture1 = new THREE.Texture(canvas1)
+            texture1.needsUpdate = true;
+            var material1 = new THREE.MeshBasicMaterial({ map: texture1, side: THREE.DoubleSide });
+            material1.transparent = true;
+
+            var mesh1 = new THREE.Mesh(
+                new THREE.PlaneGeometry(20, 2),
+                material1
+              );
+            mesh1.position.set(x, y - 3, 0.01);
+            var ball = new THREE.SphereGeometry(1, 8, 8);
+            var material = GetNodeStateMaterial(state);
+            var sphere = new THREE.Mesh(ball, material);
+
+            sphere.name = name;
+            sphere.tag = 'sphere';
+            sphere.nodeId = id;
+            sphere.state = state;
+            sphere.parentId = parent;
+            sphere.position.set(x, y, 0.001);
+
+            mesh1.name = name;
+            //mesh1.tag = 'mesh';
+            //mesh1.nodeId = id;
+            //mesh1.state = state;
+            //mesh1.parentId = parent;
+
+
+            sDic[id] = sphere;
+            pDic[id] = mesh1;
+            scene.add(sphere);
+            scene.add(mesh1);
+            objects.push(sphere);
+            initDragControls();
+        }
+
+        //获取节点状态材质
+        function GetNodeStateMaterial(state) {
+            var material;
+            switch (state) {
+                case 1:
+                    material = new THREE.MeshBasicMaterial({ color: 0x009933 });
+                    break;
+                case 0:
+                    material = new THREE.MeshBasicMaterial({ color: 0xFF6633 });
+                    break;
+                default:
+                    material = new THREE.MeshBasicMaterial({ color: 0x3c8dbc });
+            }
+            return material;
+        }
+
+        //获取线路状态材质
+        function GetLineStateMaterial(state) {
+            var material;
+            switch (state) {
+                //case 1:
+                //    material = new THREE.LineBasicMaterial({ color: 0x00ff00, linewidth: 3 });
+                //    break;
+                //case 0:
+                //    material = new THREE.LineBasicMaterial({ color: 0xFFCC99, linewidth: 3 });
+                //    break;
+                default:
+                    material = new THREE.LineBasicMaterial({ color: 0x3c8dbc, linewidth: 3 });
+
+            }
+            return material;
+        }
+
+        //事件
+
+        //获取告警信息
+        function initAlarmList() {
+            $('#tableAlarm').bootstrapTable('refresh', {});
+        }
+        function stateFormatter(value, row) {
+            if (row.State == '正在告警') {
+                //正在告警
+                return '<span class="text-red" style="font-weight:  600">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+        function operatorFormatter(value, row) {
+            return "<a type=\"button\" title=\"确认告警\" class=\"glyphicon glyphicon-list-alt text-orange\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>"
+            + "<a type=\"button\" title=\"定位告警\" class=\"glyphicon glyphicon-pushpin text-blue\" style=\"margin-left:15px\" href=\"javascript:FindNodeinMap(" + row.OrganId + ")\"></a>";
+        }
+
+        //确认告警
+        function openAlarmDetail(id, confirm) {
+            layer.confirm('是否确认选中告警？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Alarm/SolveAlarm",
+                    data: { alarmId: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            $('#tableAlarm').bootstrapTable('refresh', {});
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            });
+        }
+
+
+        //定位
+        function FindNodeinMap(id) {
+            controls.reset();
+            var pan = new THREE.Vector3(sDic[id].position.x - camera.position.x, sDic[id].position.y - camera.position.y, 0);
+            controls.position0.add(pan);
+            controls.target0.add(pan);
+            controls.reset();
+
+            ////同时更新左上边
+            inDragId = id;
+            initLineStateInfo();
+
+        }
+
+
+        //重新获取左上角 线路状态 框
+        function initLineStateInfo() {
+            if (inDragId != null) {
+                //加载信息
+                $.ajax({
+                    type: 'Post',
+                    url: "/Organization/GetOrganLines",
+                    data: { id: inDragId },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            $("#organNameTxt").html(data.Name);
+                            $("#organDesTxt").html(data.Des);
+                            var linehtml = '';
+                            for (var i = 0; i < data.Items.length; i++) {
+                                //console.log(data.Items[i].ConnectState + '---' + data.Items[i].LineIP);
+                                if (data.Items[i].ConnectState == '连通') {
+                                    linehtml += '<li>' + data.Items[i].Name + '<Br/><font style="float:right;" class="text-green">(' + data.Items[i].LineIP + ')正常</font></li>';
+                                } else {
+                                    linehtml += '<li>' + data.Items[i].Name + '<Br/><font style="float:right;font-weight:bold" class="text-red">(' + data.Items[i].LineIP + ')异常</font></li>';
+                                }
+                            }
+                            $('#infoIP li').remove();
+                            $('#infoIP').append(linehtml);
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }
+        }
+
+
+        function onDocumentMouseUp(event) {
+            initLineStateInfo();
+
+            //拖动松开后，更新Organ位置
+            if (isDrag) {
+                var x = sDic[inDragId].position.x;
+                var y = sDic[inDragId].position.y;
+
+                $.ajax({
+                    type: 'Post',
+                    url: "/Organization/SetPosition",
+                    data: { id: inDragId, x: Math.floor(x * 100) / 100, y: Math.floor(y * 100) / 100 },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            //console.log(sDic[inDragId].name);
+                            //layer.msg('修改 ' + sDic[inDragId].name + ' 位置成功！');
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            }
+            isDrag = false;
+        }
+
+        function onDocumentMouseDown(event) {
+        }
+
+        function onWindowResize() {
+            //camera.aspect = window.innerWidth / window.innerHeight;
+            //camera.updateProjectionMatrix();
+            //renderer.setSize(window.innerWidth, window.innerHeight);
+            //controls.handleResize();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (isDrag) {
+                pDic[inDragId].position.set(sDic[inDragId].position.x, sDic[inDragId].position.y - 3, 0.01);
+                //console.log(pDic[inDragId].position);
+            }
+            render();
+            controls.update();
+        }
+        var i = 0;
+        function render() {
+            //渲染场景和相机
+            renderer.render(scene, camera);
+            //CSSrenderer.render(scene, camera);
+            //console.log(camera.position.x + '--' + camera.position.y + '--' + camera.position.z);
+
+        }
+
+        function BeginRefresh() {
+
+            initAlarmList();
+            ////刷新左上角
+            initLineStateInfo();
+            ////刷新地图点
+            refreshObjectsState();
+            setTimeout(BeginRefresh, 30000);
+        }
+
+        initContainer();
+        initScene();
+        initCamera();
+        initRenderer();
+        initCameraMoveControls();
+        initAlarmList();
+        initLight();
+        initMap();
+        initObjects();
+        initDragControls();
+        initRaycaster();
+        //var axis = new THREE.AxisHelper(10);
+        //scene.add(axis);
+        animate();
+
+        BeginRefresh();
+
+        $(document).ready(function () {
+            $('#divContainer').height($('#divContainer').height() - 50);
+            $('#divContainer').split({
+                orientation: 'horizontal', position: '75%', onDrag: function myfunction() {
+                    //console.log($('#divAlarm').height())
+                    $("#tableAlarm").bootstrapTable('resetView', {
+                        height: $("#alarmContent").height()
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 无操作权限";
+    ViewBag.MainTitle = "无操作权限";
+    ViewBag.SecondTitle = "";
+    ViewBag.Menu1 = "menuHome";
+}
+<section class="content">
+    <div class="error-page">
+
+        <div class="content">
+            <h3><i class="fa fa-warning text-yellow"></i> 您不具备此项操作的权限</h3>
+            <p>
+                您所使用的账户不具备此项操作的权限。如需操作，请更换有权限的账户或向管理人员申请提升账户权限。
+            </p>
+            <form class="search-form">
+
+                <!-- /.input-group -->
+            </form>
+        </div>
+        <!-- /.error-content -->
+    </div>
+
+</section>

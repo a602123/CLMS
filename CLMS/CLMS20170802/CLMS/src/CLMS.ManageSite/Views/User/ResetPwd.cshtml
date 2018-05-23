@@ -1,0 +1,115 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+<link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/AdminLTE.min.css" />
+
+<div class="content">
+    <div class="box box-comment">
+        <div class="box-header with-border">
+
+            <div class="form-group">
+                <h4>修改密码</h4>
+            </div>
+
+
+        </div>
+
+        <div>
+            <form id="form" class="form-inline">
+                <div class="box-body">
+                    <div id="alertDiv"></div>
+                    <div class="row">
+                        <div class="form-group  col-md-6">
+                            <label for="oldPwd">
+                                原密码
+                            </label>
+                            <input type="password"  class = "form-control required" placeholder = "原密码" name = "oldPwd" id = "oldPwd" />
+                        </div>
+
+                        <div class="form-group  col-md-6">
+                            <label for="newPwd">
+                                新密码
+                            </label>
+                            <input type="password" class="form-control required" placeholder="新密码" name="newPwd" id="newPwd" />
+                        </div>
+
+                        <div class="form-group  col-md-6">
+                            <label for="newPwd2">
+                                确认密码
+                            </label>
+                            <input type="password" class="form-control required" placeholder="确认密码" name="newPwd2" id="newPwd2" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="box-footer text-center">
+            <button type="button" style="margin-right: 10px" onclick="Submit();" class="btn btn-primary">
+                提交
+            </button>
+            <a type="button" class="btn btn-default" href="javascript:parent.layer.closeAll();">取消</a>
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+<script>
+
+    function Submit() {
+        if ($('#form').valid()) {
+            if ($("#newPwd").val() == $("#newPwd2").val()) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/User/ResetPwd",
+                    data: $('#form').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            setTimeout(Close, 1000);
+                        }
+                        else {
+                            var alertDiv = GetAlertDiv(data.Message, 'alert-danger animated slideInUp');
+                            $('#alertDiv').append(alertDiv);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            } else {
+                var alertDiv = GetAlertDiv('新密码填写不同，请重新填写！', 'alert-danger animated slideInUp');
+                $('#alertDiv').append(alertDiv);
+            }
+        } else {
+            var alertDiv = GetAlertDiv('请填写正确内容！', 'alert-danger animated slideInUp');
+            $('#alertDiv').append(alertDiv);
+        }
+    }
+
+    function stateFormatter(value, row) {
+        if (row.State == '正在告警') {
+            //正在告警
+            return '<span class="text-red" style="font-weight:  600">' + value + '</span>';
+        } else {
+            return '<span class="text-black">' + value + '</span>';
+        }
+    }
+
+    function Close() {
+        parent.selectTable();
+        parent.layer.closeAll();
+    }
+</script>
+<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.js"></script>
+<script src="/plugins/layer/layer.min.js"></script>
+<script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/EasyCustom.js"></script>
+<script src="/plugins/validate/jquery.validate.min.js"></script>
+<script src="/plugins/validate/messages_zh.min.js"></script>

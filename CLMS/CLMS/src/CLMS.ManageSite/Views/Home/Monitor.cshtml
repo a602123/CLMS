@@ -1,0 +1,281 @@
+﻿@{
+    Layout = "";
+    ViewBag.Title = ViewDatas.GetInstance().GetSysName() + " | 线路监控";
+}
+
+<html style="height: 100%;">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <!-- 主题 -->
+    <link rel="stylesheet" href="/css/AdminLTE.min.css" />
+    <!-- 皮肤-->
+    <link rel="stylesheet" href="/css/skins/_all-skins.min.css" />
+    <!-- splitter-->
+    <link href="/plugins/jquery.splitter/css/jquery.splitter.css" rel="stylesheet" />
+    <!-- tree-->
+    <link href="/plugins/jQueryTree/css/core.css" rel="stylesheet" />
+    <link href="/plugins/jQueryTree/css/tree.css" rel="stylesheet" />
+    <link href="/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+
+</head>
+
+<body class="skin-blue sidebar-mini" style="height: 100%;">
+    <div class="row">
+
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo" href="/home/index">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">CLMS</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">@ViewDatas.GetInstance().GetSysName()</span>
+            </a>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+            </nav>
+        </header>
+    </div>
+
+    <div id="divContainer" style="width:100%;height:100%;">
+        <div id="divInfo">
+            <div id="divTree"> <div id="tree" style=""></div></div>
+
+            <div id="divTable" style="overflow-y:hidden">
+                <table id="tableLine" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                       data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true" data-query-params="Setparams"
+                       data-method="post" data-url="/Line/GetList"  data-striped="true"
+                       data-id-field="id" data-row-style="LineRowStyle">
+                    <thead style="font-family:'SimHei';">
+                        <tr class="active">
+                            <th data-field="Name">
+                                线路名称
+                            </th>
+                            <th data-field="LineIP">
+                                线路IP
+                            </th>
+                            <th data-field="LineType">
+                                线路类型
+                            </th>
+                            <th data-field="ServiceProvider">
+                                线路运营商
+                            </th>
+                            <th data-field="ConnectState" data-formatter="stateLineFormatter">
+                                状态
+                            </th>
+                            @*<th data-field="Log">
+                                    信息
+                                </th>*@
+                            <th data-field="CheckDate">
+                                采集时间
+                            </th>
+                            <th data-formatter="operatorFormatterLineToAlarm" data-align="center">
+                                操作
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+        <div id="divAlarm" style="overflow-y:hidden">
+            <table id="tableAlarm" class="table-condensed" data-toggle="table" data-maintain-selected="true"
+                   data-click-to-select="true" data-toolbar="#tb" data-mobile-responsive="true"
+                   data-method="post" data-url="/Alarm/GetList" data-striped="true"
+                   data-id-field="Id">
+                <thead style="font-family:'SimHei';">
+                    <tr class="active">
+                        <th data-field="LineName" data-align="center">
+                            线路名称
+                        </th>
+                        <th data-field="IP" data-align="center">
+                            线路IP
+                        </th>
+                        <th data-field="OrganName" data-align="center">
+                            所属机构
+                        </th>
+                        <th data-field="Type" data-align="center">
+                            告警类型
+                        </th>
+                        <th data-field="FirstTime" data-align="center">
+                            最早告警时间
+                        </th>
+                        <th data-field="LastTime" data-align="center">
+                            最后告警时间
+                        </th>
+                        <th data-field="AlarmCount" data-align="center">
+                            告警次数
+                        </th>
+                        <th data-field="State" data-formatter="stateFormatter" data-align="center">
+                            状态
+                        </th>
+                        <th data-formatter="operatorFormatter" data-field="OrganId" data-align="center">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+    <!--js引用-->
+    <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <script src="/plugins/jquery.splitter/js/jquery.splitter.js"></script>
+    <script src="/plugins/jQueryTree/js/core.js"></script>
+    <script src="/plugins/jQueryTree/js/tree.js"></script>
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/plugins/layer/layer.min.js"></script>
+    <script>
+        var organId, tree, alarmId;
+        $(document).ready(function () {
+            $('#divContainer').height($('#divContainer').height() - 50);
+            $('#divContainer').split({
+                orientation: 'horizontal', position: '60%', onDrag: function myfunction() {
+                    //console.log($('#divAlarm').height())
+                    $("#tableAlarm").bootstrapTable('resetView', {
+                        height: $("#divAlarm").height()
+                    });
+                    $("#tableLine").bootstrapTable('resetView', {
+                        height: $("#divTable").height()
+                    });
+                }
+            });
+            $("#tableAlarm").bootstrapTable('resetView', {
+                height: $("#divAlarm").height()
+            });
+            $("#tableLine").bootstrapTable('resetView', {
+                height: $("#divTable").height()
+            });
+
+            $('#divInfo').split({ orientation: 'vertical', position: '215px' });
+            tree = $('#tree').tree({
+                uiLibrary: 'bootstrap',
+                dataSource: '/Organization/GetOrganTree',
+                primaryKey: 'id',
+                iconsLibrary: 'fontawesome',
+
+            });
+            selectTable();
+            tree.on('select', function (e, node, id) {
+                alarmId = 0;
+                organId = id;
+                $('#tableLine').bootstrapTable('refresh', {});
+            });
+
+            setInterval('selectTable()', 30000);//每20秒刷新一次告警列表
+        });
+
+        function selectTable() {
+            table = $('#tableAlarm').bootstrapTable('refresh', {});
+            $('#tableLine').bootstrapTable('refresh', {});
+        }
+
+        function stateFormatter(value, row) {
+            if (row.State == '正在告警') {
+                //正在告警
+                return '<span class="text-red" style="font-weight:  600">' + value + '</span>';
+            } else {
+                return '<span class="text-black">' + value + '</span>';
+            }
+        }
+        function stateLineFormatter(value, row) {
+            if (row.ConnectState == '断开') {
+                //断开
+                return '<span class="text-red" style="font-weight:  600">' + value + '</span>';
+            } else {
+                return '<span class="text-green">' + value + '</span>';
+            }
+        }
+
+        function Setparams() {
+            return { id: organId };
+        }
+
+        function operatorFormatter(value, row) {
+            return "<a type=\"button\" title=\"确认告警\" class=\"glyphicon glyphicon-list-alt text-orange\" href=\"javascript:openAlarmDetail(" + row.Id + "," + row.Confirm + ")\"></a>"
+            + "<a type=\"button\" title=\"定位告警所属\" class=\"glyphicon glyphicon-pushpin text-blue\" style=\"margin-left:15px\" href=\"javascript:navigateTree(" + value + "," + row.LineId + ")\"></a>";
+        }
+
+        function operatorFormatterLineToAlarm(value, row) {
+            return "<a  title=\"查看线路告警列表\"  href=\"javascript:openAlarmList(" + row.Id + ")\">告警列表</a>"
+        }
+
+        //打开告警列表
+        function openAlarmList(id) {
+            layer.open({
+                title: '<a type=\"button\" title=\"详情\" class=\"glyphicon glyphicon-list-alt\"></a>&nbsp;线路告警列表',
+                type: 2,
+                area: ['800px', '550px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: '/Alarm/log?id=' + id,
+                success: function (layero, index) {
+                },
+                end: function () {
+                }
+            });
+        }
+
+        //确认告警
+        function openAlarmDetail(id, confirm) {
+            layer.confirm('是否确认选中告警？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/Alarm/SolveAlarm",
+                    data: { alarmId: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.State == true) {
+                            layer.msg('操作完成！');
+                            selectTable();
+                        }
+                        else {
+                            layer.msg(data.Message);
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络错误，请重试！');
+                    }
+                });
+            });
+        }
+
+        function navigateTree(id, aId) {
+            tree.unselectAll();
+            var node = tree.getNodeById(id);
+            tree.expand(node.parents('ul>li'));
+            gj.tree.methods.select(tree, node, false);
+            alarmId = aId;
+
+        }
+
+        function LineRowStyle(row, index) {
+            if (row.Id == alarmId) {
+                return {
+                    classes: 'text-nowrap another-class',
+                    css: { "background-color": "#FFFFCC", "font-size": "15px" }
+                };
+            }
+            else {
+                return {};
+            }
+        }
+
+    </script>
+</body>
+</html>
